@@ -54,19 +54,9 @@ namespace {
             auto entry1 = lookahead_list.front();
             lookahead_list.pop_front();
             cache->prefetch_line(entry1.address, (cache->get_mshr_occupancy_ratio() < 0.9), 0);
-            //handle_eviction(cache);
           }
           lookahead_list.push_back({curr_address, PREFETCH_DEGREE, it->confidence});
         }
-      }
-    }
-
-    void handle_eviction(CACHE* cache) {
-      auto entry1 = lookahead_list.front();
-      lookahead_list.pop_front();
-
-      if (entry1.degree == 0 || entry1.cur_conf < CONFIDENCE_THRESHOLD) {
-        cache->prefetch_line(entry1.address, (cache->get_mshr_occupancy_ratio() < 0.9), 0);
       }
     }
 
@@ -89,9 +79,9 @@ namespace {
             }
             if (it->degree == 0 || it->cur_conf < CONFIDENCE_THRESHOLD) {
                 cache->prefetch_line(it->address, (cache->get_mshr_occupancy_ratio() < 0.9), 0);
-                lookahead_list.erase(it);  // Remove the entry and move to the next
+                lookahead_list.erase(it);
             } else {
-                ++it;  // Move to the next entry if not erased
+                ++it;  
             }
           }
         }
